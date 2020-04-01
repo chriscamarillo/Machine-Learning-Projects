@@ -9,7 +9,7 @@ def generateDataset(start, end, diff, lo, hi, linearly_sep = True):
         i = 0
         while i < lo:
             x = random() * diff
-            y = x * coeff[0] + coeff[1] + random() * diff
+            y = x * coeff[0] + coeff[1] - random() * diff
             dataset.append([x, y, 0])
             i += 1
         
