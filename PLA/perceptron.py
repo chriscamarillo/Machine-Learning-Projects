@@ -46,9 +46,11 @@ def train_dataset(dataset):
     num_attr = len(dataset[0]) - 1
     p = Perceptron(num_attr)
 
-    for epoch in range(1000):
-        error_count = sum(p.train(entry[:-1], entry[-1]) for entry in dataset)
-        print(error_count)
+    epochs = 0
+    while sum(p.train(entry[:-1], entry[-1]) for entry in dataset) > 0:
+        epochs += 1
+
+    print(F'collapsed at {epochs} epochs')
 
 def main():
  # load in datasets
