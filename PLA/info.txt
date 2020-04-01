@@ -1,0 +1,5 @@
+Vertebral Column Data Set
+http://archive.ics.uci.edu/ml/datasets/Vertebral+Column
+
+Haberman's Survival Data Set
+http://archive.ics.uci.edu/ml/datasets/Haberman%27s+Survival
