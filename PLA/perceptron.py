@@ -26,7 +26,7 @@ def read_data(name):
 class Perceptron:
     def __init__(self, num_attr, learning_rate=0.05):
         # adds bias and initalizes weights between [-1, 1]
-        self.weights = 2 *  np.random.rand(num_attr + 1) - 1
+        self.weights = 2 * np.random.rand(num_attr + 1) - 1
         self.learning_rate = learning_rate
 
 # Perceptron learning algorithm here
