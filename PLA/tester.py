@@ -4,6 +4,7 @@ from perceptron import *
 from random import shuffle, seed
 from linearly_sep import generateDataset
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 # assume last element is a binary class
 def read_data(name):
@@ -68,7 +69,37 @@ def run_simulation(train, test):
     print(epochs, training_errors, testing_errors)
     return (epochs, training_errors, testing_errors)
 
+def something():
+    fig, ax = plt.subplots()
 
+    x = np.arange(0, 2*np.pi, 0.01)
+    line, = ax.plot(x, np.sin(x))
+
+
+    def init():  # only required for blitting to give a clean slate.
+        line.set_ydata([np.nan] * len(x))
+        return line,
+
+
+    def animate(i):
+        line.set_ydata(np.sin(x + (i % 300) / 100))  # update the data.
+        return line,
+
+
+    ani = animation.FuncAnimation(
+        fig, animate, init_func=init, interval=2, blit=True, save_count=50)
+
+    # To save the animation, use e.g.
+    #
+    # ani.save("movie.mp4")
+    #
+    # or
+    #
+    # writer = animation.FFMpegWriter(
+    #     fps=15, metadata=dict(artist='Me'), bitrate=1800)
+    # ani.save("movie.mp4", writer=writer)
+
+    plt.show()
 
 if __name__ == '__main__':
     # load in datasets 
@@ -107,4 +138,14 @@ if __name__ == '__main__':
         print(F'Testing report: {test_error_rate}% total error rate')
         print(F'Class 0 had {testing_errors[0]} out of {test_c0_count} errors: {test_c0_error_rate}%')
         print(F'Class 1 had {testing_errors[1]} out of {test_c1_count} errors: {test_c1_error_rate}%')
-        
+    
+        fig, ax = plt.subplots()
+
+        x = [s[0] for s in test]
+        y = [s[1] for s in test]
+
+        for entry in test:
+            plt.plot(entry[0], entry[1], 'o', color='orange' if entry[2] == 0 else 'green')
+        #line, = ax.plot(x, y, 'o')
+
+        plt.show()

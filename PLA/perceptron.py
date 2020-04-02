@@ -20,7 +20,7 @@ class Perceptron:
         self.weights = self.weights + changes
         return int(hypothesis != target)
 
-    def train_dataset(self, dataset, max_epochs=1000):
+    def train_dataset(self, dataset, max_epochs=10):
         # keep training til the perceptron correctly classifies all the examples
         epochs = 0
         needs_training = True
