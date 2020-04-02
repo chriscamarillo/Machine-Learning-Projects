@@ -1,4 +1,5 @@
 from random import random
+
 # random range = r_max - r_min
 # diff = amount values can differ from randomly generated line
 # first_half + second_half = size of dataset
@@ -30,11 +31,8 @@ def generateDatasetFile(dataset, filename):
         f.write(','.join(str(i) for i in v) + '\n')
 
 
-def main():
+if __name__ == "__main__":
     d = generateDataset(1, 10, 25, 50, 50, True)
     for v in d:
         print(v)
     generateDatasetFile(d, "toyset.data")
-
-if __name__ == "__main__":
-    main()
