@@ -6,7 +6,13 @@ abs_max = 10**9
 def normalize(d, x_min, x_max, y_min, y_max):
     norm = []
     for v in d:
-        norm.append([(v[0]-x_min)/(x_max-x_min), (v[1]-y_min)/(y_max-y_min), v[2]])
+        temp = []
+        x = 1 if x_min == x_max else (v[0]-x_min)/(x_max-x_min)
+        temp.append(x)
+        y = 1 if y_min == y_max else (v[1]-y_min)/(y_max-y_min)
+        temp.append(y)
+        temp.append(v[2])
+        norm.append(temp)
     return norm
 
 
@@ -64,7 +70,15 @@ def generateDatasetFile(dataset, filename):
 
 
 if __name__ == "__main__":
-    d = generateDataset(1, 10, 25, 50, 50, True)
-    for v in d:
-        print(v)
-    #generateDatasetFile(d, "toyset.data")
+    a = generateDataset(1, 10, 25, 500, 500, True)
+    b = generateDataset(1, 10, 25, 400, 600, True)
+    c = generateDataset(1, 10, 25, 300, 700, True)
+    d = generateDataset(1, 10, 25, 200, 800, True)
+    e = generateDataset(1, 10, 25, 100, 900, True)
+    f = generateDataset(1, 10, 25, 10, 990, True)
+    generateDatasetFile(a, "50-50.data")
+    generateDatasetFile(b, "40-60.data")
+    generateDatasetFile(c, "30-70.data")
+    generateDatasetFile(d, "20-80.data")
+    generateDatasetFile(e, "10-90.data")
+    generateDatasetFile(f, "1-99.data")
