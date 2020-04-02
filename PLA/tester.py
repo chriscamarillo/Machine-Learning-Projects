@@ -54,19 +54,57 @@ def stratify(dataset):
 
     return (train, test)
 
+# returns EPOCHS and the number of individual training and 
+# testing errors per class
+def run_simulation(train, test):
+    num_attr = len(train[0]) - 1 # exclude class marker
+    p = Perceptron(num_attr)
+    epochs = p.train_dataset(train)
+    
+    # gets the number of errors per class
+    training_errors = p.test_dataset(train) 
+    testing_errors = p.test_dataset(test)
+
+    print(epochs, training_errors, testing_errors)
+    return (epochs, training_errors, testing_errors)
+
+
+
 if __name__ == '__main__':
     # load in datasets 
     path = 'datasets'
     files = [f for f in listdir(path) if isfile(join(path, f))]
 
-    # toy domain test first x: [-1, 1] difference of 0.5
-    # toy_domain = generateDataset(-1, 1, 0.5, 1000, 1000)
-
-
-
     for f in files:
+        # set up data and run_simulation
         dataset = read_data(join(path, f))
-        num_attr = len(dataset[0]) - 1 # class domain takes up one column
-        p = Perceptron(num_attr)
-        epochs = p.train_dataset(dataset)
-        print(F'{files[1]} collapsed at {epochs} epochs')
+        train, test = stratify(dataset)
+        epochs, training_errors, testing_errors = run_simulation(train, test)
+        
+        print(f)
+
+        # training report
+        # TODO: plot this for pics
+        train_error_rate = sum(training_errors) / len(train) * 100
+        train_c1_count = sum(t[-1] for t in train)
+        train_c0_count = len(train) - train_c1_count
+        train_c1_error_rate = training_errors[1] / train_c1_count * 100
+        train_c0_error_rate = training_errors[0] / train_c0_count * 100
+
+        print(F'Training report: took {epochs} epochs to land at {train_error_rate}% total error rate')
+        print(F'Class 0 had {training_errors[0]} out of {train_c0_count} errors: {train_c0_error_rate}%')
+        print(F'Class 1 had {training_errors[1]} out of {train_c1_count} errors: {train_c1_error_rate}%')
+        
+
+        # testing report
+        # TODO: plot this for pics
+        test_error_rate = sum(testing_errors) / len(test) * 100
+        test_c1_count = sum(t[-1] for t in test)
+        test_c0_count = len(test) - test_c1_count
+        test_c1_error_rate = testing_errors[1] / test_c1_count * 100
+        test_c0_error_rate = testing_errors[0] / test_c0_count * 100
+
+        print(F'Testing report: {test_error_rate}% total error rate')
+        print(F'Class 0 had {testing_errors[0]} out of {test_c0_count} errors: {test_c0_error_rate}%')
+        print(F'Class 1 had {testing_errors[1]} out of {test_c1_count} errors: {test_c1_error_rate}%')
+        

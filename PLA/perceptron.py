@@ -3,7 +3,7 @@ import numpy as np
 
 class Perceptron:
     # adds bias, initalize weights between [-1, 1], and set the learning rate
-    def __init__(self, num_attr, learning_rate=0.05):
+    def __init__(self, num_attr, learning_rate=0.01):
         self.weights = 2 * np.random.rand(num_attr + 1) - 1
         self.learning_rate = learning_rate
 
@@ -35,3 +35,15 @@ class Perceptron:
             
             epochs += 1
         return epochs
+
+    # returns error per class
+    def test_dataset(self, dataset):
+        error_per_class = [0, 0]
+        for entry in dataset:
+            x = entry[:-1]
+            target = int(entry[-1])
+            hypothesis = self.evaluate(x)
+            if hypothesis != target:
+                error_per_class[target] += 1 
+        
+        return error_per_class
