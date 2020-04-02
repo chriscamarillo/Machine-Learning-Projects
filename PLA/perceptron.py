@@ -31,10 +31,7 @@ class Perceptron:
                 target = entry[-1]
                 messed_up = self.update_weights(x, target)
                 if messed_up:
-                    print('fucked up ', x, ' ', target, ' ', messed_up)
                     needs_training = True
             
             epochs += 1
-            print(epochs)
-
         return epochs
