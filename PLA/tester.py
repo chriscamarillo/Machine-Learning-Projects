@@ -56,10 +56,10 @@ def stratify(dataset):
 
 # returns EPOCHS and the number of individual training and 
 # testing errors per class
-def run_simulation(train, test):
+def run_simulation(train, test, filename):
     num_attr = len(train[0]) - 1 # exclude class marker
     p = Perceptron(num_attr)
-    epochs = p.train_dataset(train)
+    epochs = p.train_dataset(train, f)
     
     # gets the number of errors per class
     training_errors = p.test_dataset(train) 
@@ -77,7 +77,7 @@ if __name__ == '__main__':
         # set up data and run_simulation
         dataset = read_data(join(path, f))
         train, test = stratify(dataset)
-        epochs, training_errors, testing_errors, trained_weights = run_simulation(train, test)
+        epochs, training_errors, testing_errors, trained_weights = run_simulation(train, test, f)
         
         print(f)
 
@@ -103,5 +103,5 @@ if __name__ == '__main__':
         test_c0_error_rate = testing_errors[0] / test_c0_count * 100
 
         print(F'Testing report: {test_error_rate}% total error rate')
-        print(F'Class 0 had {testing_errors[0]} out of {test_c0_count} errors: {test_c0_error_rate}%')
-        print(F'Class 1 had {testing_errors[1]} out of {test_c1_count} errors: {test_c1_error_rate}%')
+        print(F'Class 0 had {testing_errors[0]} out of {test_c0_count} seen errors: {test_c0_error_rate}%')
+        print(F'Class 1 had {testing_errors[1]} out of {test_c1_count} seen errors: {test_c1_error_rate}%')

@@ -7,14 +7,6 @@ matplotlib.use('QT4Agg')
 
 from random import random
 
-# thank you stack overflow for this solid
-def abline(slope, intercept):
-    """Plot a line from slope and intercept"""
-    axes = plt.gca()
-    x_vals = np.array(axes.get_xlim())
-    y_vals = intercept + slope * x_vals
-    ax.plot(x_vals, y_vals, '--')
-
 class Perceptron:
     # adds bias, initalize weights between [-1, 1], and set the learning rate
     def __init__(self, num_attr, learning_rate=0.01):
@@ -34,7 +26,7 @@ class Perceptron:
         self.weights = self.weights + changes
         return int(hypothesis != target)
 
-    def train_dataset(self, dataset, max_epochs=1000):
+    def train_dataset(self, dataset, title, max_epochs=1000):
         # keep training til the perceptron correctly classifies all the examples
         epochs = 0
         needs_training = True
@@ -60,6 +52,7 @@ class Perceptron:
 
             # picture
             fig, ax = plt.subplots(2)
+            fig.suptitle(title)
 
             for entry in dataset:
                 ax[0].plot(entry[0], entry[1], 'o', color='orange' if entry[2] == 0 else 'green')
