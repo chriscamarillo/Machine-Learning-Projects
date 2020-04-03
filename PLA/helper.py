@@ -3,6 +3,7 @@ from math import *
 
 abs_min = -10**9
 abs_max = 10**9
+sign = [-1, 1]
 
 def normalize(d, x_min, x_max, y_min, y_max):
     norm = []
@@ -22,8 +23,8 @@ def normalize(d, x_min, x_max, y_min, y_max):
 # first_half + second_half = size of dataset
 def generateDataset(r_min, r_max, diff, bound, first_half, second_half, linearly_sep = True):
     if linearly_sep == True:
-        # coeff[0] represents y = coeff[0]x + coeff[1]
-        coeff = [random() * (r_max - r_min + 1) + r_min for x in range(2)]
+        # line[0] represents y = line[0]x + line[1]
+        line = [sign[randint(0,len(sign)-1)] * random() * (r_max - r_min + 1) + r_min, random() * (r_max - r_min + 1) + r_min]
         # [x, y, class]
         dataset = []
 
@@ -38,7 +39,7 @@ def generateDataset(r_min, r_max, diff, bound, first_half, second_half, linearly
                 x_mm[0] = x
             if x > x_mm[1]:
                 x_mm[1] = x
-            y = x * coeff[0] + coeff[1] - (random() * diff + bound)
+            y = x * line[0] + line[1] - (random() * diff + bound)
             if y < y_mm[0]:
                 y_mm[0] = y
             if y > y_mm[1]:
@@ -53,7 +54,7 @@ def generateDataset(r_min, r_max, diff, bound, first_half, second_half, linearly
                 x_mm[0] = x
             if x > x_mm[1]:
                 x_mm[1] = x
-            y = x * coeff[0] + coeff[1] + (random() * diff + bound)
+            y = x * line[0] + line[1] + (random() * diff + bound)
             if y < y_mm[0]:
                 y_mm[0] = y
             if y > y_mm[1]:
