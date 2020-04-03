@@ -1,4 +1,4 @@
-from random import *
+from random import random, randint, sample, choices
 from math import *
 
 abs_min = -10**9
@@ -72,44 +72,51 @@ def generateDatasetFile(dataset, filename):
 
 
 def undersample(dataset):
-    dataset.sort(key = lambda x:x[-1])
-    second_class_sum = sum(v[-1] for v in dataset)
-    first_class_sum = len(dataset) - second_class_sum
-    # more of class 1 than class 0
-    if second_class_sum > first_class_sum:
-        balanced = [v for v in dataset if v[-1] == 0]
-        for i in [x+first_class_sum for x in range(first_class_sum)]:
-            balanced.append(dataset[i])
-    # more of class 0 than class 1 (or equal size)
+    class_0 = [v for v in dataset if v[-1] == 0] 
+    class_1 = [v for v in dataset if v[-1] == 1]
+    class_count_0 = len(class_0)
+    class_count_1 = len(class_1)
+    balanced = []
+
+    if class_count_0 == class_count_1:
+        return dataset
+    elif class_count_0 < class_count_1: # truncate class_1 items to class_0 size
+        balanced += class_0
+        balanced += sample(class_1, k=class_count_0)
     else:
-        balanced = [v for v in dataset if v[-1] == 1]
-        for i in range(second_class_sum):
-            balanced.insert(0, dataset[i])
+        balanced += class_1
+        balanced += sample(class_0, k=class_count_1)
+
     return balanced
 
 
 def oversample(dataset):
-    dataset.sort(key = lambda x:x[-1])
-    second_class_sum = sum(v[-1] for v in dataset)
-    first_class_sum = len(dataset) - second_class_sum
-    # more of class 1 than class 0
-    if second_class_sum > first_class_sum:
-        r = [dataset[randint(0, first_class_sum-1)] for i in range(second_class_sum-first_class_sum)]
-        balanced = r + dataset
-    # more of class 0 than class 1 (or equal size)
+    class_0 = [v for v in dataset if v[-1] == 0] 
+    class_1 = [v for v in dataset if v[-1] == 1]
+    class_count_0 = len(class_0)
+    class_count_1 = len(class_1)
+    balanced = []
+    
+    if class_count_0 == class_count_1:
+        return dataset
+    elif class_count_0 < class_count_1:
+        balanced += class_1
+        balanced += class_0 + choices(class_0, k=class_count_1 - class_count_0)
     else:
-        r = [dataset[randint(second_class_sum-1,len(dataset)-1)] for i in range(first_class_sum-second_class_sum)]
-        balanced = dataset + r
+        balanced += class_0
+        balanced += class_1 + choices(class_1, k=class_count_0 - class_count_1)
+
     return balanced
 
 
 if __name__ == "__main__":
-    a = generateDataset(1, 10, 25, 5,  500, 500, True)
-    b = generateDataset(1, 10, 25, 5, 400, 600, True)
-    c = generateDataset(1, 10, 25, 5, 300, 700, True)
-    d = generateDataset(1, 10, 25, 5, 200, 800, True)
-    e = generateDataset(1, 10, 25, 5, 100, 900, True)
-    f = generateDataset(1, 10, 25, 5, 10, 990, True)
+
+    a = generateDataset(-2, 2, 300, 10,  500, 500, True)
+    b = generateDataset(-2, 2, 300, 10, 400, 600, True)
+    c = generateDataset(-2, 2, 300, 10, 300, 700, True)
+    d = generateDataset(-2, 2, 300, 10, 200, 800, True)
+    e = generateDataset(-2, 2, 300, 10, 100, 900, True)
+    f = generateDataset(-2, 2, 300, 10, 10, 990, True)
     generateDatasetFile(a, "50-50.data")
     generateDatasetFile(b, "40-60.data")
     generateDatasetFile(c, "30-70.data")
