@@ -101,6 +101,11 @@ def print_confusion_matrix(test_errors_by_class, test):
     # ALL ABOUT THE POS
     precision = true_0s / (true_0s + false_0s)    
 
+    print(F'total_0s: {total_0s}\ttotal_1s: {total_1s}')
+    print(F'true_0s: {true_0s}\tfalse_0s: {false_0s}')
+    print(F'true_1s: {true_1s}\tfalse_1s: {false_1s}')
+
+
     print(F'total # of errors: {sum(test_errors_by_class)}')
     print(F'errors from class 0: {test_errors_by_class[0]} class 1: {test_errors_by_class[1]}')
     print(F'test error rate: {sum(test_errors_by_class) / len(test)}%')
