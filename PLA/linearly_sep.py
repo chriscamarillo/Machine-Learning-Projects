@@ -1,4 +1,5 @@
-from random import random
+from random import *
+from math import *
 
 abs_min = -10**9
 abs_max = 10**9
@@ -67,6 +68,38 @@ def generateDatasetFile(dataset, filename):
     f = open(f"datasets/{filename}", 'w')
     for v in dataset:
         f.write(','.join(str(i) for i in v) + '\n')
+
+
+def undersample(dataset):
+    dataset.sort(key = lambda x:x[-1])
+    second_class_sum = sum(v[-1] for v in dataset)
+    first_class_sum = len(dataset) - second_class_sum
+    # more of class 1 than class 0
+    if second_class_sum > len(dataset)//2:
+        balanced = [v for v in dataset if v[-1] == 0]
+        for i in [x+first_class_sum for x in range(first_class_sum)]:
+            balanced.append(dataset[i])
+    # more of class 0 than class 1
+    else:
+        balanced = [v for v in dataset if v[-1] == 1]
+        for i in range(second_class_sum):
+            balanced.insert(0, dataset[i])
+    return balanced
+
+
+def oversample(dataset):
+    dataset.sort(key = lambda x:x[-1])
+    second_class_sum = sum(v[-1] for v in dataset)
+    first_class_sum = len(dataset) - second_class_sum
+    # more of class 1 than class 0
+    if second_class_sum > len(dataset)//2:
+        r = [dataset[randint(0, first_class_sum)] for i in range(second_class_sum-first_class_sum)]
+        balanced = r + dataset
+    # more of class 0 than class 1
+    else:
+        r = [dataset[randint(second_class_sum-1,len(dataset))] for i in range(first_class_sum-second_class_sum)]
+        balanced = dataset + r
+    return balanced
 
 
 if __name__ == "__main__":
