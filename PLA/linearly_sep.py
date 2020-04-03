@@ -75,11 +75,11 @@ def undersample(dataset):
     second_class_sum = sum(v[-1] for v in dataset)
     first_class_sum = len(dataset) - second_class_sum
     # more of class 1 than class 0
-    if second_class_sum > len(dataset)//2:
+    if second_class_sum > first_class_sum:
         balanced = [v for v in dataset if v[-1] == 0]
         for i in [x+first_class_sum for x in range(first_class_sum)]:
             balanced.append(dataset[i])
-    # more of class 0 than class 1
+    # more of class 0 than class 1 (or equal size)
     else:
         balanced = [v for v in dataset if v[-1] == 1]
         for i in range(second_class_sum):
@@ -92,12 +92,12 @@ def oversample(dataset):
     second_class_sum = sum(v[-1] for v in dataset)
     first_class_sum = len(dataset) - second_class_sum
     # more of class 1 than class 0
-    if second_class_sum > len(dataset)//2:
-        r = [dataset[randint(0, first_class_sum)] for i in range(second_class_sum-first_class_sum)]
+    if second_class_sum > first_class_sum:
+        r = [dataset[randint(0, first_class_sum-1)] for i in range(second_class_sum-first_class_sum)]
         balanced = r + dataset
-    # more of class 0 than class 1
+    # more of class 0 than class 1 (or equal size)
     else:
-        r = [dataset[randint(second_class_sum-1,len(dataset))] for i in range(first_class_sum-second_class_sum)]
+        r = [dataset[randint(second_class_sum-1,len(dataset)-1)] for i in range(first_class_sum-second_class_sum)]
         balanced = dataset + r
     return balanced
 
