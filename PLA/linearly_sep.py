@@ -20,7 +20,7 @@ def normalize(d, x_min, x_max, y_min, y_max):
 # random range = r_max - r_min
 # diff = amount values can differ from randomly generated line
 # first_half + second_half = size of dataset
-def generateDataset(r_min, r_max, diff, first_half, second_half, linearly_sep = True):
+def generateDataset(r_min, r_max, diff, bound, first_half, second_half, linearly_sep = True):
     if linearly_sep == True:
         # coeff[0] represents y = coeff[0]x + coeff[1]
         coeff = [random() * (r_max - r_min + 1) + r_min for x in range(2)]
@@ -38,7 +38,7 @@ def generateDataset(r_min, r_max, diff, first_half, second_half, linearly_sep = 
                 x_mm[0] = x
             if x > x_mm[1]:
                 x_mm[1] = x
-            y = x * coeff[0] + coeff[1] - random() * diff
+            y = x * coeff[0] + coeff[1] - (random() * diff + bound)
             if y < y_mm[0]:
                 y_mm[0] = y
             if y > y_mm[1]:
@@ -53,7 +53,7 @@ def generateDataset(r_min, r_max, diff, first_half, second_half, linearly_sep = 
                 x_mm[0] = x
             if x > x_mm[1]:
                 x_mm[1] = x
-            y = x * coeff[0] + coeff[1] + random() * diff
+            y = x * coeff[0] + coeff[1] + (random() * diff + bound)
             if y < y_mm[0]:
                 y_mm[0] = y
             if y > y_mm[1]:
@@ -103,12 +103,12 @@ def oversample(dataset):
 
 
 if __name__ == "__main__":
-    a = generateDataset(1, 10, 25, 500, 500, True)
-    b = generateDataset(1, 10, 25, 400, 600, True)
-    c = generateDataset(1, 10, 25, 300, 700, True)
-    d = generateDataset(1, 10, 25, 200, 800, True)
-    e = generateDataset(1, 10, 25, 100, 900, True)
-    f = generateDataset(1, 10, 25, 10, 990, True)
+    a = generateDataset(1, 10, 25, 5,  500, 500, True)
+    b = generateDataset(1, 10, 25, 5, 400, 600, True)
+    c = generateDataset(1, 10, 25, 5, 300, 700, True)
+    d = generateDataset(1, 10, 25, 5, 200, 800, True)
+    e = generateDataset(1, 10, 25, 5, 100, 900, True)
+    f = generateDataset(1, 10, 25, 5, 10, 990, True)
     generateDatasetFile(a, "50-50.data")
     generateDatasetFile(b, "40-60.data")
     generateDatasetFile(c, "30-70.data")
