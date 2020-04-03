@@ -17,6 +17,20 @@ def normalize(d, x_min, x_max, y_min, y_max):
         norm.append(temp)
     return norm
 
+def sprayer(m, b, lo, hi):
+    points_01 = [[], []]
+
+    for i in range((lo + hi) * 3):
+        x, y = random(), random()
+        c = 1 if y > x * m + b else 0
+        points_01[c].append([x, y, c])
+    
+    dataset = []
+    print(points_01[0])
+    dataset += choices(points_01[0], k=lo)
+    dataset += choices(points_01[1], k=hi)
+   
+    return dataset
 
 # random range = r_max - r_min
 # diff = amount values can differ from randomly generated line
@@ -111,14 +125,12 @@ def oversample(dataset):
 
 if __name__ == "__main__":
 
-    a = generateDataset(-2, 2, 300, 10,  500, 500, True)
-    b = generateDataset(-2, 2, 300, 10, 400, 600, True)
     c = generateDataset(-2, 2, 300, 10, 300, 700, True)
-    d = generateDataset(-2, 2, 300, 10, 200, 800, True)
-    e = generateDataset(-2, 2, 300, 10, 100, 900, True)
+    d = sprayer(random(), random() * 0.5, 200, 800)
+    e = sprayer(random(), random() * 0.5, 100, 900)
     f = generateDataset(-2, 2, 300, 10, 10, 990, True)
-    generateDatasetFile(a, "50-50.data")
-    generateDatasetFile(b, "40-60.data")
+    # generateDatasetFile(a, "50-50.data")
+    # generateDatasetFile(b, "40-60.data")
     generateDatasetFile(c, "30-70.data")
     generateDatasetFile(d, "20-80.data")
     generateDatasetFile(e, "10-90.data")
