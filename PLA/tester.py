@@ -171,7 +171,7 @@ def show_results(results, plots, test, filename):
         
         
         # 2D graph of testing data + resulting line from weights    
-        ax_test.set_title(F'{filename} train results')
+        ax_test.set_title(F'{filename} test results')
         ax_test.set_xlabel(F'x')
         ax_test.set_ylabel(F'y')
 

@@ -17,18 +17,27 @@ def normalize(d, x_min, x_max, y_min, y_max):
         norm.append(temp)
     return norm
 
-def sprayer(m, b, lo, hi):
+def sprayer(m, b, lo, hi, linearly_sep = True):
     points_01 = [[], []]
 
     for i in range((lo + hi) * 3):
         x, y = random(), random()
         c = 1 if y > x * m + b else 0
         points_01[c].append([x, y, c])
-    
+
     dataset = []
-    print(points_01[0])
+    #print(points_01[0])
     dataset += choices(points_01[0], k=lo)
     dataset += choices(points_01[1], k=hi)
+
+    if not linearly_sep:
+        i = 0
+        while i < 0.05 * lo:
+            x, y = random(), random()
+            r = randint(0, lo-1)
+            if y > x * m + b:
+                dataset[r] = [x,y,0]
+                i+=1  
    
     return dataset
 
@@ -98,8 +107,8 @@ def undersample(dataset):
         balanced += class_0
         balanced += sample(class_1, k=class_count_0)
     else:
-        balanced += class_1
         balanced += sample(class_0, k=class_count_1)
+        balanced += class_1
 
     return balanced
 
@@ -114,8 +123,8 @@ def oversample(dataset):
     if class_count_0 == class_count_1:
         return dataset
     elif class_count_0 < class_count_1:
-        balanced += class_1
         balanced += class_0 + choices(class_0, k=class_count_1 - class_count_0)
+        balanced += class_1
     else:
         balanced += class_0
         balanced += class_1 + choices(class_1, k=class_count_0 - class_count_1)
@@ -125,13 +134,15 @@ def oversample(dataset):
 
 if __name__ == "__main__":
 
-    c = generateDataset(-2, 2, 300, 10, 300, 700, True)
-    d = sprayer(random(), random() * 0.5, 200, 800)
-    e = sprayer(random(), random() * 0.5, 100, 900)
-    f = generateDataset(-2, 2, 300, 10, 10, 990, True)
+    #c = generateDataset(-2, 2, 300, 10, 300, 700, True)
+    #d = sprayer(random(), random() * 0.5, 200, 800)
+    #e = sprayer(random(), random() * 0.5, 100, 900)
+    #f = generateDataset(-2, 2, 300, 10, 10, 990, True)
     # generateDatasetFile(a, "50-50.data")
     # generateDatasetFile(b, "40-60.data")
-    generateDatasetFile(c, "30-70.data")
-    generateDatasetFile(d, "20-80.data")
-    generateDatasetFile(e, "10-90.data")
-    generateDatasetFile(f, "1-99.data")
+    #generateDatasetFile(c, "30-70.data")
+    #generateDatasetFile(d, "20-80.data")
+    #generateDatasetFile(e, "10-90.data")
+    #generateDatasetFile(f, "1-99.data")
+    nls = sprayer(random(), random() * 0.5, 200, 800, False)
+    generateDatasetFile(nls, "nls.data")
