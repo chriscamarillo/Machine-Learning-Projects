@@ -1,9 +1,28 @@
-from random import random, randint, sample, choices
+from random import random, randint, sample, choices, shuffle
 from math import *
+import re
 
 abs_min = -10**9
 abs_max = 10**9
 sign = [-1, 1]
+
+# refactored generalized version of normalize
+def normalize_dataset(dataset):
+    # figure out maxes
+    num_attr = len(dataset[0]) - 1
+    attr_mins = []
+    attr_maxs = []
+
+    for i in range(num_attr):
+        # figure out the maximum and minumum value for a certain attribute
+        # AKA a column
+        possible_vals = [d[i] for d in dataset]
+        attr_mins.append(min(possible_vals))
+        attr_maxs.append(max(possible_vals))
+    
+    for entry in dataset:
+        for i in range(num_attr):
+            entry[i] = 1 if attr_mins[i] == attr_maxs[i] else (entry[i]-attr_mins[i])/(attr_maxs[i]-attr_mins[i])
 
 def normalize(d, x_min, x_max, y_min, y_max):
     norm = []
@@ -17,28 +36,38 @@ def normalize(d, x_min, x_max, y_min, y_max):
         norm.append(temp)
     return norm
 
-def sprayer(m, b, lo, hi, linearly_sep = True):
+def sprayer(m, b, lo, hi, border, noise=0):
     points_01 = [[], []]
 
-    for i in range((lo + hi) * 3):
-        x, y = random(), random()
-        c = 1 if y > x * m + b else 0
+    for i in range(lo + hi):
+        x = random()
+        y = x * m + b
+        delta = 0
+        if i < lo:
+            delta = -random() * y - border
+        else:
+            delta = random() * (1 - y) + border
+
+        y += delta
+        c = 0 if i < lo else 1
         points_01[c].append([x, y, c])
+ 
+    # for i in range((lo + hi) * 3):
+    #     x, y = random(), random()
+    #     c = 1 if y > x * m + b else 0
+    #     points_01[c].append([x, y, c])
 
     dataset = []
-    #print(points_01[0])
     dataset += choices(points_01[0], k=lo)
     dataset += choices(points_01[1], k=hi)
+    if noise > 0:
+        shuffle(dataset)
+        noise = [dataset.pop() for d in range(noise)]
+        for n in noise:
+            n[-1] = 1 if n[-1] == 0 else 0
+        dataset += noise
+        dataset.sort(key=lambda x: x[-1])
 
-    if not linearly_sep:
-        i = 0
-        while i < 0.05 * lo:
-            x, y = random(), random()
-            r = randint(0, lo-1)
-            if y > x * m + b:
-                dataset[r] = [x,y,0]
-                i+=1  
-   
     return dataset
 
 # random range = r_max - r_min
@@ -110,6 +139,11 @@ def undersample(dataset):
         balanced += sample(class_0, k=class_count_1)
         balanced += class_1
 
+    a = [v for v in balanced if v[-1] == 0]
+    b = [v for v in balanced if v[-1] == 1]
+    print('undersample: class0: ', len(a))
+    print('undersample: class1: ', len(b))
+
     return balanced
 
 
@@ -129,6 +163,12 @@ def oversample(dataset):
         balanced += class_0
         balanced += class_1 + choices(class_1, k=class_count_0 - class_count_1)
 
+    a = [v for v in balanced if v[-1] == 0]
+    b = [v for v in balanced if v[-1] == 1]
+    print('oversample: class0: ', len(a))
+    print('oversample: class1: ', len(b))
+
+    
     return balanced
 
 
@@ -144,5 +184,6 @@ if __name__ == "__main__":
     #generateDatasetFile(d, "20-80.data")
     #generateDatasetFile(e, "10-90.data")
     #generateDatasetFile(f, "1-99.data")
-    nls = sprayer(random(), random() * 0.5, 200, 800, False)
-    generateDatasetFile(nls, "nls.data")
+    # nls = sprayer(1, 0, 300, 700, 0.05, noise=40)
+    # generateDatasetFile(nls, "nls.data")
+    pass
